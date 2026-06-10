@@ -1,109 +1,256 @@
-# 💳 Credit Card Fraud Detection using Tuned XGBoost
+# 💳 Fraud Detection ML Inference Platform
 
-A supervised machine learning project focused on detecting **highly imbalanced credit card fraud data** using **XGBoost**, feature selection, and **Bayesian hyperparameter optimization**.
+A production-oriented fraud detection platform built with **XGBoost, FastAPI, Redis, Docker, and Gunicorn**.
 
----
-
-## Overview
-
-Fraud detection datasets are notoriously imbalanced, making accuracy a misleading metric.
-
-This project builds a **robust fraud classification pipeline** that:
-- Handles severe class imbalance
-- Selects informative features
-- Tunes model hyperparameters efficiently
-- Optimizes for **F1-score**, not raw accuracy
+The system combines **Bayesian-tuned machine learning models**, **business-driven threshold optimization**, and **production-ready deployment practices** to support both real-time and batch fraud detection workloads.
 
 ---
 
-## Dataset
+# Live Demo
 
-- **Source:** Credit card transactions dataset
-- **Target variable:** `Class`
-  - `0` → Legitimate transaction
-  - `1` → Fraudulent transaction
+**API Base URL**
+
+https://fraud-model-image-latest.onrender.com
+
+**Interactive API Documentation**
+
+https://fraud-model-image-latest.onrender.com//docs
+
+---
+## Business Goal
+
+Credit card fraud detection is a highly imbalanced classification problem where fraudulent transactions represent only a small fraction of total activity.
+
+The objective is to:
+
+* Detect fraudulent transactions as early as possible
+* Minimize financial losses
+* Reduce false positives that impact legitimate customers
+* Support scalable fraud monitoring workflows
 
 ---
 
-## Dataset Access
+## Features
 
-Due to file size limitations, the credit card transactions dataset is not included in this repository.
-
-To reproduce the results:
-1. Download the dataset from Kaggle (Credit Card Fraud Detection dataset)
-2. Place the file in the project root as:
-
----
-
-## Problem Challenges
-
-- Extreme class imbalance
-- Risk of overfitting
-- High cost of false negatives
-- Feature redundancy
+* Real-time fraud prediction (`/predict`)
+* Batch CSV fraud scoring (`/predict/csv`)
+* Redis-backed metrics (`/metrics`)
+* Health monitoring (`/health`)
+* Model metadata & versioning
+* Rate limiting
+* Structured logging
+* Request tracing using UUIDs
+* Dockerized deployment
+* Multi-worker serving with Gunicorn
 
 ---
 
-## Modeling Approach
+## Machine Learning Approach
 
-### 🔹 Baseline Model
-- **XGBoost Classifier**
-- Adjusted `scale_pos_weight` to handle imbalance
-- Evaluated using confusion matrix and classification report
+### Model Development
 
----
+* XGBoost Classifier
+* Bayesian Hyperparameter Optimization
+* Class imbalance handling using `scale_pos_weight`
+* Business-aligned threshold tuning using Precision-Recall analysis
 
-### 🔹 Feature Selection
-- Applied **SelectKBest (ANOVA F-test)**
-- Reduced dimensionality to top-k features
-- Improved generalization and training efficiency
+### Threshold Optimization
 
----
+Instead of using the default classification threshold (`0.5`), the deployed threshold was selected using **Precision-Recall Curve analysis**.
 
-### 🔹 Hyperparameter Optimization
-Used **Bayesian Optimization** to tune:
-- `max_depth`
-- `learning_rate`
-- `n_estimators`
-- `scale_pos_weight`
-- Number of selected features (`k`)
+The primary objective was to maximize precision while maintaining an acceptable level of recall. During evaluation, candidate thresholds were analyzed on the Precision-Recall curve, and a threshold was selected from the region where:
 
-Optimization objective:
-> **Maximize F1-score using cross-validation**
+- Precision ≥ 95%
+- Recall ≥ 83%
+
+These values were used as threshold selection criteria rather than optimization targets themselves. The resulting threshold was then deployed as part of the inference service to support high-confidence fraud detection while limiting false positive predictions.ves that could impact legitimate customers.
 
 ---
 
-## Final Model
+## Architecture
 
-- Trained using optimized hyperparameters
-- Evaluated on a held-out test set
-- Compared against baseline model
+```text
+Client
+  │
+  ▼
+FastAPI
+  │
+  ▼
+Gunicorn Workers
+  │
+  ├── Real-Time Inference
+  ├── Batch CSV Processing
+  └── Metrics Collection
+  │
+  ▼
+Redis
+  │
+  ▼
+XGBoost Fraud Detection Model
+```
 
-Metrics reported:
-- Confusion Matrix
-- Precision, Recall, F1-score
+---
+
+## API Endpoints
+
+| Endpoint              | Description                     |
+| --------------------- | ------------------------------- |
+| `POST /predict`       | Real-time fraud prediction      |
+| `POST /predict/csv`   | Batch fraud detection using CSV |
+| `GET /metrics`        | Runtime metrics and statistics  |
+| `GET /health`         | Service health check            |
+| `GET /health/details` | Detailed service status         |
+| `GET /model/info`     | Model metadata                  |
 
 ---
 
 ## Tech Stack
 
-- Python
-- Pandas
-- Scikit-learn
-- XGBoost
-- Bayesian Optimization (`bayes_opt`)
+### Machine Learning
+
+* XGBoost
+* Scikit-learn
+* Pandas
+* NumPy
+
+### Backend
+
+* FastAPI
+* Pydantic
+* Gunicorn
+
+### Infrastructure
+
+* Docker
+* Docker Compose
+* Redis
+
+### Monitoring & Observability
+
+* Structured Logging
+* Runtime Metrics
+* Health Checks
 
 ---
 
-## Key Takeaways
+## Project Structure
 
-- Class imbalance must be explicitly addressed
-- Feature selection improves robustness
-- Bayesian Optimization is more efficient than grid search
-- F1-score is critical in fraud detection problems
+```text
+app/
+├── auth.py
+├── config.py
+├── logger.py
+├── main.py
+├── redis_client.py
+├── routes.py
+├── schemas.py
+├── services.py
+└── logs/
+    └── app.logs
+    
+models/
+└── model.pkl
+
+Dockerfile
+docker-compose.yml
+requirements.txt
+.env
+```
 
 ---
 
-## Project Status
+## Running Locally
 
-Complete — serves as a **reference pipeline** for imbalanced classification problems in finance and security domains.
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd fraud-detection-platform
+```
+
+Environment variables:
+```text
+Use the existing env in the repository
+```
+
+
+Start the application:
+
+```bash
+docker compose up --build
+```
+
+API Documentation:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+## Authentication
+
+Protected endpoints require HTTP Basic Authentication.
+
+Demo credentials:
+
+```text
+Username: admin
+Password: admin123
+```
+
+Protected Endpoints:
+
+- `POST /predict`
+- `POST /predict/csv`
+- `GET /metrics`
+- `GET /model/info`
+
+These credentials are configured through environment variables and are intended for demonstration and local development purposes.
+
+---
+
+## Key Engineering Decisions
+
+* Startup validation for model loading
+* Redis-backed metrics for multi-worker consistency
+* Gunicorn workers for concurrent inference
+* Structured logging and request tracing
+* Rate limiting for API protection
+* Bayesian hyperparameter tuning
+* Precision-Recall curve based threshold selection
+* Business-aligned deployment threshold instead of default model thresholds
+
+---
+
+## Future Improvements
+
+* Prometheus & Grafana Monitoring
+* CI/CD with GitHub Actions
+* MLflow Model Registry
+* JWT Authentication
+* Kubernetes Deployment
+
+---
+
+## Dataset
+
+The original dataset is not included due to file size limitations.
+
+Dataset:
+**Credit Card Fraud Detection Dataset (Kaggle)**
+
+---
+
+## Status
+
+✅ Production-Oriented MVP Complete
+
+This project demonstrates the transition from machine learning experimentation to a deployable fraud detection platform with scalable inference, monitoring, observability, and containerized infrastructure.
+
+### Deployment
+
+- Dockerized
+- Redis-backed metrics
+- Multi-worker serving with Gunicorn
+- Deployed on Render

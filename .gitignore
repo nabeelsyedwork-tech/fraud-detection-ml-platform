@@ -1,0 +1,77 @@
+# Python
+
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+
+venv/
+.venv/
+env/
+ENV/
+
+# Environment Variables
+
+.env
+
+# IDEs
+
+.vscode/
+.idea/
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+# Logs
+
+*.log
+logs/
+
+# Testing
+
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build Artifacts
+
+build/
+dist/
+*.egg-info/
+
+# OS Files
+
+.DS_Store
+Thumbs.db
+
+# Model Artifacts (optional)
+
+# Uncomment if model files are too large
+
+# models/*.pkl
+
+# models/*.joblib
+
+# Docker
+
+docker-compose.override.yml
+
+# Redis
+
+redis_data/
+
+# MLflow (future)
+
+mlruns/
+
+# Temporary Files
+
+*.tmp
+*.temp
+
+# Local SQLite Databases
+
+*.db
+*.sqlite3
