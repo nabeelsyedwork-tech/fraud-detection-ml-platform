@@ -188,6 +188,14 @@ http://localhost:8000/docs
 
 ---
 
+## Example Requests
+
+Sample request files are available in the `examples/` directory:
+
+- `sample_transaction.json` → Real-time prediction example
+- `sample_batch.csv` → Batch prediction example
+
+---
 ## Authentication
 
 Protected endpoints require HTTP Basic Authentication.
