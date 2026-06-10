@@ -164,7 +164,7 @@ requirements.txt
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/nabeelsyedwork-tech/fraud-detection-ml-platform.git
 cd fraud-detection-platform
 ```
 
