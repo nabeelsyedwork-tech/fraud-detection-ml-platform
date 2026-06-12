@@ -14,7 +14,7 @@ https://fraud-model-image-latest.onrender.com
 
 **Interactive API Documentation**
 
-https://fraud-model-image-latest.onrender.com//docs
+https://fraud-model-image-latest.onrender.com/docs
 
 ---
 ## Business Goal
