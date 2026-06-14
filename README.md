@@ -63,7 +63,7 @@ The primary objective was to maximize precision while maintaining an acceptable 
 - Precision ≥ 95%
 - Recall ≥ 83%
 
-These values were used as threshold selection criteria rather than optimization targets themselves. The resulting threshold was then deployed as part of the inference service to support high-confidence fraud detection while limiting false positive predictions.ves that could impact legitimate customers.
+These values were used as threshold selection criteria rather than optimization targets themselves. The resulting threshold was then deployed as part of the inference service to support high-confidence fraud detection while limiting false positive predictions that could impact legitimate customers.
 
 ---
 
